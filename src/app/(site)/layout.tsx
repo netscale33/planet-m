@@ -21,9 +21,11 @@ export default function SiteLayout({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     const lenis = new Lenis({
-      duration: 1.8,
+      duration: 1.2,
       smoothWheel: true,
-      wheelMultiplier: 1,
+      wheelMultiplier: 0.8,
+      syncTouch: true,
+      touchMultiplier: 1.2,
     });
     lenisRef.current = lenis;
 

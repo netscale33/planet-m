@@ -112,6 +112,8 @@ export default function HomePage() {
   const [scrollLeft,     setScrollLeft]     = useState(0);
   const [lightboxOpen,   setLightboxOpen]   = useState(false);
   const [lightboxIndex,  setLightboxIndex]  = useState(0);
+  const [videoLoaded,    setVideoLoaded]    = useState(false);
+  const [nextVideoLoaded, setNextVideoLoaded] = useState(false);
 
   const filteredModels = activeCategory === "ALL" ? models : models.filter((m) => m.category === activeCategory);
 
@@ -132,21 +134,35 @@ export default function HomePage() {
     return () => clearInterval(interval);
   }, []);
 
-  // Programmatic autoplay bypass for active slide video
+  // Programmatic autoplay & preload next slide
   useEffect(() => {
     if (!heroRef.current) return;
-    const videos = heroRef.current.querySelectorAll<HTMLVideoElement>("video");
-    videos.forEach((video, index) => {
-      if (index === activeSlide) {
-        // Ensure properties are set
-        video.muted = true;
-        video.play().catch((err) => {
-          console.warn("Muted video programmatic play failed:", err);
-        });
-      } else {
-        video.pause();
-      }
-    });
+    
+    // Play active slide video
+    const activeVideo = heroRef.current.querySelector<HTMLVideoElement>(`video[data-slide="${activeSlide}"]`);
+    if (activeVideo) {
+      activeVideo.muted = true;
+      activeVideo.play().catch(() => {});
+    }
+    
+    // Preload next slide's video
+    const nextIndex = (activeSlide + 1) % slides.length;
+    // Create a hidden preload link for the next video
+    const link = document.createElement('link');
+    link.rel = 'preload';
+    link.as = 'video';
+    link.href = slides[nextIndex].video;
+    link.id = 'preload-next-video';
+    const existing = document.getElementById('preload-next-video');
+    if (existing) existing.remove();
+    document.head.appendChild(link);
+    
+    // Reset loaded state for new slide
+    setVideoLoaded(false);
+    
+    // Force-hide spinner after 6s (safety net for slow connections)
+    const timeout = setTimeout(() => setVideoLoaded(true), 6000);
+    return () => clearTimeout(timeout);
   }, [activeSlide]);
 
   // Grid category filter animation
@@ -240,49 +256,99 @@ export default function HomePage() {
           backgroundColor: "var(--bg-secondary)",
         }}
       >
-        {/* Mapped Model Video Backgrounds */}
-        {slides.map((slide, i) => (
-          <div
-            key={slide.seed}
-            style={{
-              position: "absolute",
-              inset: 0,
-              opacity: i === activeSlide ? 1 : 0,
-              transition: "opacity 1.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)",
-              zIndex: i === activeSlide ? 1 : 0,
-            }}
-          >
-            <video
-              src={slide.video}
-              autoPlay
-              muted
-              loop
-              playsInline
-              preload={i === activeSlide ? "auto" : "metadata"}
+        {/* Active slide video + inactive static images for performance */}
+        {slides.map((slide, i) => {
+          const isActive = i === activeSlide;
+          const imgUrl = `https://images.pexels.com/photos/${slide.seed}/pexels-photo-${slide.seed}.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1080&fit=crop`;
+          return (
+            <div
+              key={slide.seed}
+              className="gpu"
               style={{
-                width: "100%",
-                height: "100%",
-                objectFit: "cover",
-                objectPosition: "center 25%",
-                pointerEvents: "none",
+                position: "absolute",
+                inset: 0,
+                opacity: isActive ? 1 : 0,
+                transition: "opacity 1.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)",
+                zIndex: isActive ? 1 : 0,
               }}
-            />
+            >
+              {/* Static poster image shown for all slides */}
+              <img
+                src={imgUrl}
+                alt=""
+                loading={isActive ? "eager" : "lazy"}
+                decoding="async"
+                style={{
+                  position: "absolute",
+                  inset: 0,
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "cover",
+                  objectPosition: "center 25%",
+                  pointerEvents: "none",
+                }}
+              />
+              {/* Video only rendered for active slide */}
+              {isActive && (
+                <video
+                  data-slide={i}
+                  src={slide.video}
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  preload="auto"
+                  onLoadedData={() => setVideoLoaded(true)}
+                  onError={() => setVideoLoaded(true)}
+                  style={{
+                    position: "absolute",
+                    inset: 0,
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "cover",
+                    objectPosition: "center 25%",
+                    pointerEvents: "none",
+                  }}
+                />
+              )}
+              {/* Loading overlay shown briefly until video loads */}
+              {isActive && !videoLoaded && (
+                <div style={{
+                  position: "absolute",
+                  inset: 0,
+                  zIndex: 3,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  background: "rgba(13,11,9,0.3)",
+                }}>
+                  <div style={{
+                    width: 32,
+                    height: 32,
+                    border: "2px solid rgba(196,164,76,0.15)",
+                    borderTopColor: "var(--gold-mid)",
+                    borderRadius: "50%",
+                    animation: "spin 0.8s linear infinite",
+                  }} />
+                </div>
+              )}
 
-            {/* Gradient overlays per slide */}
-            <div style={{
-              position: "absolute",
-              inset: 0,
-              background: "linear-gradient(to right, rgba(5,3,2,0.62) 0%, rgba(5,3,2,0.18) 55%, transparent 100%)",
-              zIndex: 1,
-            }} />
-            <div style={{
-              position: "absolute",
-              inset: 0,
-              background: "linear-gradient(to top, rgba(5,3,2,0.7) 0%, transparent 50%)",
-              zIndex: 1,
-            }} />
-          </div>
-        ))}
+              {/* Gradient overlays per slide */}
+              <div style={{
+                position: "absolute",
+                inset: 0,
+                background: "linear-gradient(to right, rgba(5,3,2,0.62) 0%, rgba(5,3,2,0.18) 55%, transparent 100%)",
+                zIndex: 1,
+              }} />
+              <div style={{
+                position: "absolute",
+                inset: 0,
+                background: "linear-gradient(to top, rgba(5,3,2,0.7) 0%, transparent 50%)",
+                zIndex: 1,
+              }} />
+            </div>
+          );
+        })}
 
         {/* ── Slide text block ── */}
         <div
