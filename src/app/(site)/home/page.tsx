@@ -1086,6 +1086,7 @@ export default function HomePage() {
             return (
               <div
                 key={article.seed}
+                className="news-grid-item"
                 style={{
                   position: "relative",
                   overflow: "hidden",

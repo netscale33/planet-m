@@ -534,11 +534,18 @@ button {
   .news-grid, .blog-grid {
     grid-template-columns: 1fr !important;
   }
-  .news-grid > div, .blog-grid > div {
-    grid-column: auto !important;
+  .news-grid > div, .blog-grid > div,
+  .news-grid-item {
+    grid-column: 1 / -1 !important;
     grid-row: auto !important;
-    min-height: 320px !important;
-    aspect-ratio: 16/9 !important;
+    min-height: auto !important;
+    aspect-ratio: 4/3 !important;
+    width: 100% !important;
+  }
+  .news-grid-item img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
   }
 }
 
