@@ -18,9 +18,9 @@ const navigateLinks = [
 ];
 
 const contactInfo = [
-  { label: "Phone",     value: "+91 98765 43210", type: "text" },
-  { label: "Rahul Mehra",  value: "Mehrarahul.films@gmail.com", type: "email" },
-  { label: "Ahana Batra",  value: "Batraahana.movies@gmail.com", type: "email" },
+  { label: "Phone",     value: "+91 96905 29233", type: "text" },
+  { label: "Rahul Mehra",  value: "mehrarahul.films@planetm.agency", type: "email" },
+  { label: "Ahana Batra",  value: "batraahana.movies@planetm.agency", type: "email" },
   { label: "Address",   value: "J40/10, 3rd Floor, Near Zee Studio, Noida Film City, Gautam Buddha Nagar, UP — 201301", type: "text" },
 ];
 

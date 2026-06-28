@@ -357,7 +357,7 @@ export default function IntroGate() {
       }} />
 
       {/* ── Corner flourishes ── */}
-      <div style={{
+      <div className="gate-bottom-left" style={{
         position: "absolute",
         bottom: 28,
         left: "var(--gutter)",
@@ -372,7 +372,7 @@ export default function IntroGate() {
         Fashion · Commercial · Editorial · Runway
       </div>
 
-      <div style={{
+      <div className="gate-bottom-right" style={{
         position: "absolute",
         bottom: 28,
         right: "var(--gutter)",

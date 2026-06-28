@@ -7,8 +7,8 @@ const localBusinessSchema = {
   name: "Planet M",
   description: "India's Premier Modeling Agency based in Noida Film City.",
   url: "https://www.planetm.in",
-  telephone: "+91-98765-43210",
-  email: "Mehrarahul.films@gmail.com",
+  telephone: "+91-96905-29233",
+  email: "mehrarahul.films@planetm.agency",
   address: {
     "@type": "PostalAddress",
     streetAddress: "J40/10, 3rd Floor, Near Zee Studio, Noida Film City",

@@ -68,7 +68,7 @@ export default function ModelDetailPage() {
     { label: "HAIR", value: "Black" },
     { label: "LOCATION", value: "Noida Film City" },
     { label: "CATEGORY", value: model.category },
-    { label: "BOOKING", value: "Batraahana.movies@gmail.com" },
+    { label: "BOOKING", value: "batraahana.movies@planetm.agency" },
   ];
 
   // Pick 9 unique curated fashion images dynamically based on model seed to ensure unique portfolio lists
@@ -407,7 +407,7 @@ export default function ModelDetailPage() {
           For booking inquiries, availability, and rates, please get in touch with our casting office.
         </p>
         <a
-          href="mailto:Batraahana.movies@gmail.com"
+          href="mailto:batraahana.movies@planetm.agency"
           style={{
             fontFamily: "var(--font-ui)",
             fontSize: "0.8rem",

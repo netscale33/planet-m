@@ -1,7 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
-import { Upload } from "lucide-react";
+import { useState } from "react";
 
 const requirements = [
   { title: "Age", desc: "16 — 35" },
@@ -19,7 +18,6 @@ interface FormData {
   phone: string;
   instagram: string;
   bio: string;
-  photo: File | null;
 }
 
 const inputStyle: React.CSSProperties = {
@@ -56,25 +54,29 @@ export default function BecomeAModelPage() {
     phone: "",
     instagram: "",
     bio: "",
-    photo: null,
   });
   const [submitted, setSubmitted] = useState(false);
-  const [dragOver, setDragOver] = useState(false);
-  const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleChange = (field: keyof FormData, value: string | File | null) => {
+  const handleChange = (field: keyof FormData, value: string) => {
     setForm((prev) => ({ ...prev, [field]: value }));
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    const message = [
+      "*Model Application*",
+      "",
+      `Full Name: ${form.fullName}`,
+      `DOB: ${form.dob}`,
+      `Height: ${form.height}`,
+      `City: ${form.city}`,
+      `Email: ${form.email}`,
+      `Phone: ${form.phone}`,
+      `Instagram: ${form.instagram}`,
+      `Bio: ${form.bio}`,
+    ].join("\n");
+    window.open(`https://wa.me/919690529233?text=${encodeURIComponent(message)}`, "_blank");
     setSubmitted(true);
-  };
-
-  const handleFileDrop = (files: FileList | null) => {
-    if (files && files[0]) {
-      handleChange("photo", files[0]);
-    }
   };
 
   return (
@@ -381,65 +383,6 @@ export default function BecomeAModelPage() {
                   onFocus={(e) => { e.target.style.borderColor = "#C4A44C"; }}
                   onBlur={(e) => { e.target.style.borderColor = "#C2B8AA"; }}
                 />
-              </div>
-
-              {/* Photo Upload */}
-              <div>
-                <label style={labelStyle}>Photo Upload</label>
-                <div
-                  onClick={() => fileInputRef.current?.click()}
-                  onDragOver={(e) => {
-                    e.preventDefault();
-                    setDragOver(true);
-                  }}
-                  onDragLeave={() => setDragOver(false)}
-                  onDrop={(e) => {
-                    e.preventDefault();
-                    setDragOver(false);
-                    handleFileDrop(e.dataTransfer.files);
-                  }}
-                  className={`become-upload-zone ${dragOver ? "dragover" : ""}`}
-                >
-                  <div
-                    style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      alignItems: "center",
-                      gap: 12,
-                    }}
-                  >
-                    <Upload size={32} color={form.photo ? "#C4A44C" : "var(--text-dim)"} />
-                    <p
-                      style={{
-                        fontFamily: "var(--font-body)",
-                        fontSize: "var(--text-body)",
-                        fontWeight: 400,
-                        color: form.photo ? "var(--text-primary)" : "var(--text-secondary)",
-                      }}
-                    >
-                      {form.photo
-                        ? form.photo.name
-                        : "Drag & drop your photo here, or click to browse"}
-                    </p>
-                    <p
-                      style={{
-                        fontFamily: "var(--font-body)",
-                        fontSize: "var(--text-small)",
-                        fontWeight: 400,
-                        color: "var(--text-dim)",
-                      }}
-                    >
-                      JPG, PNG — Max 10MB
-                    </p>
-                  </div>
-                  <input
-                    ref={fileInputRef}
-                    type="file"
-                    accept="image/jpeg,image/png"
-                    style={{ display: "none" }}
-                    onChange={(e) => handleFileDrop(e.target.files)}
-                  />
-                </div>
               </div>
 
               <div>

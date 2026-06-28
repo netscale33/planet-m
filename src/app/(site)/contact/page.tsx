@@ -63,6 +63,16 @@ export default function ContactPage() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    const message = [
+      "*Contact Form Submission*",
+      "",
+      `Name: ${form.name}`,
+      `Email: ${form.email}`,
+      `Phone: ${form.phone}`,
+      `Inquiry Type: ${form.inquiryType}`,
+      `Message: ${form.message}`,
+    ].join("\n");
+    window.open(`https://wa.me/919690529233?text=${encodeURIComponent(message)}`, "_blank");
     setSubmitted(true);
   };
 
@@ -155,7 +165,7 @@ export default function ContactPage() {
                     color: "var(--text-secondary)",
                   }}
                 >
-                  +91 98765 43210
+                  +91 96905 29233
                 </p>
               </InfoItem>
               <InfoItem icon={<Mail size={16} />}>
@@ -167,7 +177,7 @@ export default function ContactPage() {
                     color: "var(--text-secondary)",
                   }}
                 >
-                  Mehrarahul.films@gmail.com
+                  mehrarahul.films@planetm.agency
                 </p>
               </InfoItem>
             </div>
@@ -209,7 +219,7 @@ export default function ContactPage() {
                   color: "var(--text-secondary)",
                 }}
               >
-                Batraahana.movies@gmail.com
+                batraahana.movies@planetm.agency
               </p>
             </InfoItem>
           </div>

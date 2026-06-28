@@ -247,6 +247,7 @@ export default function HomePage() {
       ═══════════════════════════════════════ */}
       <section
         ref={heroRef}
+        className="hero-section"
         style={{
           position: "relative",
           width: "100%",
